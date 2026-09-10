@@ -26,31 +26,37 @@ class MovieDetailView: UIView {
         return formatter.string(from: date)
     }
     
-    private func setupLabel(label: UILabel, fontSize: CGFloat) -> UILabel {
-        let label = label
+    private func setupLabel(fontSize: CGFloat, weight: UIFont.Weight = .regular) -> UILabel {
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: fontSize)
+        label.font = UIFont.systemFont(ofSize: fontSize, weight: weight)
         return label
     }
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        return setupLabel(label: label, fontSize: 24)
+        let label = setupLabel(fontSize: 24, weight: .bold)
+        label.numberOfLines = 0
+        return label
     }()
     
     private lazy var releaseDateLabel: UILabel = {
-        let label = UILabel()
-        return setupLabel(label: label, fontSize: 18)
+        return setupLabel(fontSize: 18)
     }()
     
     private lazy var ratingLabel: UILabel = {
-        let label = UILabel()
-        return setupLabel(label: label, fontSize: 18)
+        return setupLabel(fontSize: 18)
+    }()
+    
+    private lazy var separatorLabel: UILabel = {
+        let label = setupLabel(fontSize: 18)
+        label.text = "-"
+        return label
     }()
     
     private lazy var descriptionStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             releaseDateLabel,
+            separatorLabel,
             ratingLabel
         ])
         
