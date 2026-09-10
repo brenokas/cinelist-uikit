@@ -10,15 +10,47 @@ import UIKit
 class FilmListViewCell: UITableViewCell {
     static let identifier = "FilmListViewCell"
     
-    private lazy var filmName: UILabel = {
+    private func setLabel(fontSize: CGFloat, weight: UIFont.Weight) -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Filme"
+        label.font = UIFont.systemFont(ofSize: fontSize, weight: weight)
+        return label
+    }
+    
+    private lazy var filmNameLabel: UILabel = {
+        let label = setLabel(fontSize: 16, weight: .bold)
+        label.numberOfLines = 0
         return label
     }()
     
+    private lazy var filmRatingLabel: UILabel = {
+        return setLabel(fontSize: 14, weight: .regular)
+    }()
+    
+    private lazy var posterImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "moviePlaceholder")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8
+        return imageView
+    }()
+    
+    private lazy var infosStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            filmNameLabel,
+            filmRatingLabel
+        ])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        return stackView
+    }()
+    
     func setMovie(movie: Movie) {
-        filmName.text = movie.title
+        filmNameLabel.text = movie.title
+        filmRatingLabel.text = movie.rating.formatRating()
     }
     
     private func setupView() {
@@ -29,15 +61,32 @@ class FilmListViewCell: UITableViewCell {
     }
     
     private func setHierarchy() {
-        contentView.addSubview(filmName)
+        contentView.addSubview(posterImageView)
+        contentView.addSubview(infosStackView)
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            filmName.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            filmName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            filmName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            filmName.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            posterImageView.topAnchor.constraint(
+                equalTo: contentView.topAnchor,
+                constant: 8),
+            posterImageView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: 16),
+            posterImageView.bottomAnchor.constraint(
+                lessThanOrEqualTo: contentView.bottomAnchor,
+                constant: -8),
+            posterImageView.widthAnchor.constraint(equalToConstant: 80),
+            posterImageView.heightAnchor.constraint(equalToConstant: 120),
+            
+            
+            infosStackView.leadingAnchor.constraint(
+                equalTo: posterImageView.trailingAnchor,
+                constant: 16),
+            infosStackView.trailingAnchor.constraint(
+                lessThanOrEqualTo: contentView.trailingAnchor,
+                constant: -16),
+            infosStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     

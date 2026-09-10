@@ -83,7 +83,7 @@ class MovieDetailView: UIView {
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         releaseDateLabel.text = "\(formatDate(date: movie.releaseDate))"
-        ratingLabel.text = String(format: "Avaliação: %.1f", movie.rating)
+        ratingLabel.text = "Avaliação: \(movie.rating.formatRating())"
     }
     
     private func setupView() {

@@ -23,6 +23,8 @@ class MovieListView: UIView {
         tableView.register(
             FilmListViewCell.self,
             forCellReuseIdentifier: FilmListViewCell.identifier)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 136
         return tableView
     }()
     
