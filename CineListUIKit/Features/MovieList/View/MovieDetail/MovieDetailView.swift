@@ -47,35 +47,38 @@ class MovieDetailView: UIView {
         return setupLabel(fontSize: 18)
     }()
     
-    private lazy var separatorLabel: UILabel = {
-        let label = setupLabel(fontSize: 18)
-        label.text = "-"
-        return label
-    }()
-    
-    private lazy var descriptionStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            releaseDateLabel,
-            separatorLabel,
-            ratingLabel
-        ])
-        
-        stackView.axis = .horizontal
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = 10
-        
-        return stackView
+    private lazy var posterImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "moviePlaceholder")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8
+        return imageView
     }()
     
     private lazy var filmDataStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
-            descriptionStackView
+            releaseDateLabel,
+            ratingLabel
         ])
         
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 10
+        stackView.alignment = .leading
+        return stackView
+    }()
+    
+    private lazy var filmStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            posterImageView,
+            filmDataStackView
+        ])
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 16
         stackView.alignment = .center
         return stackView
     }()
@@ -93,20 +96,26 @@ class MovieDetailView: UIView {
     }
     
     private func setHierarchy() {
-        addSubview(filmDataStackView)
+        addSubview(filmStackView)
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            filmDataStackView.topAnchor.constraint(
+            posterImageView.widthAnchor.constraint(equalToConstant: 120),
+            posterImageView.heightAnchor.constraint(equalToConstant: 180),
+            
+            filmStackView.topAnchor.constraint(
                 equalTo: safeAreaLayoutGuide.topAnchor,
                 constant: 20),
-            filmDataStackView.leadingAnchor.constraint(
+            filmStackView.leadingAnchor.constraint(
                 equalTo: leadingAnchor,
                 constant: 18),
-            filmDataStackView.trailingAnchor.constraint(
+            filmStackView.trailingAnchor.constraint(
                 equalTo: trailingAnchor,
                 constant: -18),
+            filmStackView.bottomAnchor.constraint(
+                lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor,
+                constant: -20)
         ])
     }
 }
