@@ -46,6 +46,26 @@ class MovieDetailView: UIView {
     private lazy var ratingLabel: UILabel = {
         return setupLabel(fontSize: 18)
     }()
+
+    private lazy var ratingImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .systemYellow
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
+    private lazy var ratingStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            ratingImageView,
+            ratingLabel
+        ])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 4
+        return stackView
+    }()
     
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
@@ -61,7 +81,7 @@ class MovieDetailView: UIView {
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
             releaseDateLabel,
-            ratingLabel
+            ratingStackView
         ])
         
         stackView.axis = .vertical
@@ -86,7 +106,7 @@ class MovieDetailView: UIView {
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         releaseDateLabel.text = "\(formatDate(date: movie.releaseDate))"
-        ratingLabel.text = "Avaliação: \(movie.rating.formatRating())"
+        ratingLabel.text = "\(movie.rating.formatRating())"
     }
     
     private func setupView() {

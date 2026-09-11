@@ -27,6 +27,26 @@ class FilmListViewCell: UITableViewCell {
         return setLabel(fontSize: 14, weight: .regular)
     }()
     
+    private lazy var ratingImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .systemYellow
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private lazy var filmRatingStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            ratingImageView,
+            filmRatingLabel
+        ])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 4
+        return stackView
+    }()
+    
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +60,7 @@ class FilmListViewCell: UITableViewCell {
     private lazy var infosStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             filmNameLabel,
-            filmRatingLabel
+            filmRatingStackView
         ])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -56,6 +76,8 @@ class FilmListViewCell: UITableViewCell {
     private func setupView() {
         backgroundColor = .clear
         selectionStyle = .none
+        accessoryType = .disclosureIndicator
+        
         setHierarchy()
         setConstraints()
     }
@@ -84,7 +106,7 @@ class FilmListViewCell: UITableViewCell {
                 equalTo: posterImageView.trailingAnchor,
                 constant: 16),
             infosStackView.trailingAnchor.constraint(
-                lessThanOrEqualTo: contentView.trailingAnchor,
+                lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor,
                 constant: -16),
             infosStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
