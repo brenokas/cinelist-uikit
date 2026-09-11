@@ -135,7 +135,10 @@ class MovieDetailView: UIView {
                 constant: -18),
             filmStackView.bottomAnchor.constraint(
                 lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor,
-                constant: -20)
+                constant: -20),
+            
+            ratingImageView.widthAnchor.constraint(equalToConstant: 18),
+            ratingImageView.heightAnchor.constraint(equalToConstant: 18)
         ])
     }
 }

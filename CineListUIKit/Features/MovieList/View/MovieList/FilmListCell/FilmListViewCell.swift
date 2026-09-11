@@ -108,7 +108,10 @@ class FilmListViewCell: UITableViewCell {
             infosStackView.trailingAnchor.constraint(
                 lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor,
                 constant: -16),
-            infosStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            infosStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            ratingImageView.widthAnchor.constraint(equalToConstant: 18),
+            ratingImageView.heightAnchor.constraint(equalToConstant: 18)
         ])
     }
     
