@@ -28,6 +28,18 @@ class MovieListView: UIView {
         return tableView
     }()
     
+    let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "Buscar filme"
+        searchBar.autocapitalizationType = .none
+        return searchBar
+    }()
+    
+    func setupSearchBar(delegate: UISearchBarDelegate) {
+        searchBar.delegate = delegate
+    }
+    
     func setupFilmList(
         dataSource: UITableViewDataSource,
         delegate: UITableViewDelegate
@@ -54,6 +66,7 @@ class MovieListView: UIView {
     
     private func setHierarchy() {
         addSubview(filmListLabel)
+        addSubview(searchBar)
         addSubview(filmList)
     }
     
@@ -68,8 +81,9 @@ class MovieListView: UIView {
             filmListLabel.trailingAnchor.constraint(
                 equalTo: trailingAnchor,
                 constant: -16),
+            
             filmList.topAnchor.constraint(
-                equalTo: filmListLabel.bottomAnchor,
+                equalTo: searchBar.bottomAnchor,
                 constant: 16),
             filmList.leadingAnchor.constraint(
                 equalTo: leadingAnchor,
@@ -77,7 +91,17 @@ class MovieListView: UIView {
             filmList.trailingAnchor.constraint(
                 equalTo: trailingAnchor,
                 constant: -16),
-            filmList.bottomAnchor.constraint(equalTo: bottomAnchor)
+            filmList.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            searchBar.topAnchor.constraint(
+               equalTo: filmListLabel.bottomAnchor,
+               constant: 18),
+           searchBar.leadingAnchor.constraint(
+               equalTo: leadingAnchor,
+               constant: 8),
+           searchBar.trailingAnchor.constraint(
+               equalTo: trailingAnchor,
+               constant: -8),
         ])
     }
 }

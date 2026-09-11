@@ -74,7 +74,7 @@ class FilmListViewCell: UITableViewCell {
     }
     
     private func setupView() {
-        backgroundColor = .clear
+        backgroundColor = .systemBackground
         selectionStyle = .none
         accessoryType = .disclosureIndicator
         
