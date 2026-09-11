@@ -14,7 +14,7 @@ extension MovieListViewController:
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int) -> Int {
-        filteredMovies.count
+            viewModel.numberOfMovies
     }
     
     func tableView(
@@ -27,7 +27,7 @@ extension MovieListViewController:
             return UITableViewCell()
         }
         
-        let movie = filteredMovies[indexPath.row]
+        let movie = viewModel.movie(at: indexPath.row)
         cell.setMovie(movie: movie)
         
         return cell
@@ -39,7 +39,7 @@ extension MovieListViewController:
             
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let movie = filteredMovies[indexPath.row]
+        let movie = viewModel.movie(at: indexPath.row)
         let movieDetail = MovieDetailViewController(movie: movie)
         
         navigationController?.pushViewController(

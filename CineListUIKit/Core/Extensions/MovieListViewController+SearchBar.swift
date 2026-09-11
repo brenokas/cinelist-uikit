@@ -13,28 +13,14 @@ extension MovieListViewController:
     func searchBar(
         _ searchBar: UISearchBar,
         textDidChange searchText: String) {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if query.isEmpty {
-            filteredMovies = movies
-        } else {
-            filteredMovies = movies.filter { $0.title.range(
-                of: query,
-                options: [
-                    .caseInsensitive,
-                    .diacriticInsensitive
-                ]
-            ) != nil
-            }
-        }
-        contentView.filmList.reloadData()
+            viewModel.filterMovies(by: searchText)
+                
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
         searchBar.text = nil
-        filteredMovies = movies
-        contentView.filmList.reloadData()
+        viewModel.clearSearch()
         searchBar.resignFirstResponder()
     }
     

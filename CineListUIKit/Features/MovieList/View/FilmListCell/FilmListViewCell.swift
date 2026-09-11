@@ -70,7 +70,7 @@ class FilmListViewCell: UITableViewCell {
     
     func setMovie(movie: Movie) {
         filmNameLabel.text = movie.title
-        filmRatingLabel.text = movie.rating.formatRating()
+        filmRatingLabel.text = movie.vote_average?.formatRating() ?? ""
     }
     
     private func setupView() {

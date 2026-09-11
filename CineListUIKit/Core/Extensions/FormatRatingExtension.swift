@@ -9,6 +9,6 @@ import Foundation
 
 extension Double {
     func formatRating() -> String {
-        return String(format: "%.1f", self)
+        return String(format: "%.1f", self / 2)
     }
 }
