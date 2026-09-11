@@ -11,4 +11,5 @@ struct Movie {
     let title: String
     let releaseDate: Date
     let rating: Double
+    let overview: String
 }

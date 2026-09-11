@@ -12,8 +12,6 @@ class MovieDetailViewController: UIViewController {
     
     private let contentView = MovieDetailView()
     
-    
-    
     init(movie: Movie) {
         self.movie = movie
         super.init(nibName: nil, bundle: nil)

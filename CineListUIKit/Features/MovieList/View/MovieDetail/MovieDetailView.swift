@@ -77,6 +77,13 @@ class MovieDetailView: UIView {
         return imageView
     }()
     
+    private lazy var overviewLabel: UILabel = {
+        let label = setupLabel(fontSize: 18)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        return label
+    }()
+    
     private lazy var filmDataStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
@@ -99,14 +106,33 @@ class MovieDetailView: UIView {
         stackView.axis = .horizontal
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 16
-        stackView.alignment = .center
+        stackView.alignment = .top
         return stackView
+    }()
+    
+    private lazy var contentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            filmStackView,
+            overviewLabel
+        ])
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 20
+        return stackView
+    }()
+    
+    private lazy var contentScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.alwaysBounceVertical = true
+        return scrollView
     }()
     
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         releaseDateLabel.text = "\(formatDate(date: movie.releaseDate))"
         ratingLabel.text = "\(movie.rating.formatRating())"
+        overviewLabel.text = movie.overview
     }
     
     private func setupView() {
@@ -116,27 +142,34 @@ class MovieDetailView: UIView {
     }
     
     private func setHierarchy() {
-        addSubview(filmStackView)
+        addSubview(contentScrollView)
+        
+        contentScrollView.addSubview(contentStackView)
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
+            contentScrollView.topAnchor.constraint(equalTo: topAnchor),
+            contentScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            contentStackView.topAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.topAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.bottomAnchor),
+            contentStackView.leadingAnchor.constraint(
+                equalTo: contentScrollView.contentLayoutGuide.leadingAnchor,
+                constant: 18),
+            contentStackView.trailingAnchor.constraint(
+                equalTo: contentScrollView.contentLayoutGuide.trailingAnchor,
+                constant: -18),
+            contentStackView.widthAnchor.constraint(
+                equalTo: contentScrollView.frameLayoutGuide.widthAnchor,
+                constant: -36),
+            
             posterImageView.widthAnchor.constraint(equalToConstant: 120),
             posterImageView.heightAnchor.constraint(equalToConstant: 180),
-            
-            filmStackView.topAnchor.constraint(
-                equalTo: safeAreaLayoutGuide.topAnchor,
-                constant: 20),
-            filmStackView.leadingAnchor.constraint(
-                equalTo: leadingAnchor,
-                constant: 18),
-            filmStackView.trailingAnchor.constraint(
-                equalTo: trailingAnchor,
-                constant: -18),
-            filmStackView.bottomAnchor.constraint(
-                lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor,
-                constant: -20),
-            
             ratingImageView.widthAnchor.constraint(equalToConstant: 18),
             ratingImageView.heightAnchor.constraint(equalToConstant: 18)
         ])
