@@ -32,8 +32,16 @@ class MovieListViewController: UIViewController {
             self?.contentView.filmList.reloadData()
         }
         
-        viewModel.onError = { errorMessage in
-            print("Erro ao buscar filmes: \(errorMessage)")
+        viewModel.onStateChanged = { [weak self] state in
+            self?.contentView.render(state: state)
+        }
+        
+        contentView.onRetryTapped = { [weak self] in
+            guard let self else { return }
+            
+            Task {
+                await self.viewModel.loadMovies()
+            }
         }
     }
 
