@@ -130,9 +130,9 @@ class MovieDetailView: UIView {
     
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
-        releaseDateLabel.text = "\(movie.release_date ?? "")"
-        ratingLabel.text = "\(movie.vote_average?.formatRating() ?? "")"
-        overviewLabel.text = movie.overview
+        releaseDateLabel.text = "\(movie.release_date?.formatDate() ?? "Sem data de lançamento disponível.")"
+        ratingLabel.text = "\(movie.vote_average?.formatRating() ?? "0.0")"
+        overviewLabel.text = movie.overview ?? "Esse filme não possui sinopse."
     }
     
     private func setupView() {
