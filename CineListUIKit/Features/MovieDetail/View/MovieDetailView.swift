@@ -9,6 +9,8 @@ import UIKit
 
 class MovieDetailView: UIView {
     
+    private var imageTask: Task<Void, Never>?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -70,10 +72,11 @@ class MovieDetailView: UIView {
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "moviePlaceholder")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
+        
+        imageView.setFilmPlaceholder()
         return imageView
     }()
     
@@ -129,10 +132,24 @@ class MovieDetailView: UIView {
     }()
     
     func configure(with movie: Movie) {
+        imageTask?.cancel()
+        
         titleLabel.text = movie.title
         releaseDateLabel.text = "\(movie.release_date?.formatDate() ?? "Sem data de lançamento disponível.")"
         ratingLabel.text = "\(movie.vote_average?.formatRating() ?? "0.0")"
         overviewLabel.text = movie.overview ?? "Esse filme não possui sinopse."
+        posterImageView.setFilmPlaceholder()
+        
+        guard let posterURL = movie.posterURL(size: "w500") else { return }
+        
+        imageTask = Task { [weak self] in
+            guard let image = await ImageLoader.shared.image(from: posterURL),
+                  !Task.isCancelled else {
+                return
+            }
+            
+            self?.posterImageView.image = image
+        }
     }
     
     private func setupView() {

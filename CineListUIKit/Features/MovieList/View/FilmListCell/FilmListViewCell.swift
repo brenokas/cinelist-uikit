@@ -10,6 +10,9 @@ import UIKit
 class FilmListViewCell: UITableViewCell {
     static let identifier = "FilmListViewCell"
     
+    private var imageTask: Task<Void, Never>?
+    private var representedMovieID: Int?
+    
     private func setLabel(fontSize: CGFloat, weight: UIFont.Weight) -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -50,10 +53,11 @@ class FilmListViewCell: UITableViewCell {
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "moviePlaceholder")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
+        
+        imageView.setFilmPlaceholder()
         return imageView
     }()
     
@@ -69,8 +73,36 @@ class FilmListViewCell: UITableViewCell {
     }()
     
     func setMovie(movie: Movie) {
+        representedMovieID = movie.id
+        imageTask?.cancel()
+        
         filmNameLabel.text = movie.title
         filmRatingLabel.text = movie.vote_average?.formatRating() ?? ""
+        posterImageView.setFilmPlaceholder()
+        
+        guard let posterURL = movie.posterURL(size: "w342") else {
+            return
+        }
+        
+        imageTask = Task { [weak self] in
+            guard let image = await ImageLoader.shared.image(from: posterURL),
+                  !Task.isCancelled,
+                  self?.representedMovieID == movie.id else {
+                return
+            }
+            
+            self?.posterImageView.image = image
+        }
+        
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        imageTask?.cancel()
+        imageTask = nil
+        representedMovieID = nil
+        posterImageView.setFilmPlaceholder()
     }
     
     private func setupView() {
