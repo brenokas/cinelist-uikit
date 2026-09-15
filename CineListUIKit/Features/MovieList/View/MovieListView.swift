@@ -33,6 +33,7 @@ class MovieListView: UIView {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.placeholder = "Buscar filme"
         searchBar.autocapitalizationType = .none
+        searchBar.searchBarStyle = .minimal
         return searchBar
     }()
     
