@@ -9,7 +9,8 @@ import UIKit
 
 class MovieDetailView: UIView {
     
-    private var imageTask: Task<Void, Never>?
+    private var posterImageTask: Task<Void, Never>?
+    private var backdropImageTask: Task<Void, Never>?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -72,11 +73,19 @@ class MovieDetailView: UIView {
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         
         imageView.setFilmPlaceholder()
+        return imageView
+    }()
+    
+    private lazy var backdropImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.backgroundColor = .secondarySystemBackground
         return imageView
     }()
     
@@ -109,7 +118,7 @@ class MovieDetailView: UIView {
         stackView.axis = .horizontal
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 16
-        stackView.alignment = .top
+        stackView.alignment = .center
         return stackView
     }()
     
@@ -128,27 +137,45 @@ class MovieDetailView: UIView {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true
+        scrollView.contentInsetAdjustmentBehavior = .never
         return scrollView
     }()
     
     func configure(with movie: Movie) {
-        imageTask?.cancel()
+        posterImageTask?.cancel()
+        backdropImageTask?.cancel()
         
         titleLabel.text = movie.title
         releaseDateLabel.text = "\(movie.release_date?.formatDate() ?? "Sem data de lançamento disponível.")"
         ratingLabel.text = "\(movie.vote_average?.formatRating() ?? "0.0")"
         overviewLabel.text = movie.overview ?? "Esse filme não possui sinopse."
+        
+        // estado inicial -> fallback do poster
         posterImageView.setFilmPlaceholder()
         
-        guard let posterURL = movie.posterURL(size: "w500") else { return }
+        //estado inicial -> fallback do backdrop
+        backdropImageView.setBackdropPlaceholder()
         
-        imageTask = Task { [weak self] in
+        guard let posterURL = movie.posterURL(size: "w500") else { return }
+        guard let backdropURL = movie.backdropURL(size: "w1280") else { return }
+        
+        posterImageTask = Task { [weak self] in
             guard let image = await ImageLoader.shared.image(from: posterURL),
                   !Task.isCancelled else {
                 return
             }
             
+            self?.posterImageView.contentMode = .scaleAspectFill
             self?.posterImageView.image = image
+        }
+        
+        backdropImageTask = Task { [weak self] in
+            guard let image = await ImageLoader.shared.image(from: backdropURL),
+                  !Task.isCancelled else {
+                return
+            }
+            
+            self?.backdropImageView.image = image
         }
     }
     
@@ -160,12 +187,19 @@ class MovieDetailView: UIView {
     
     private func setHierarchy() {
         addSubview(contentScrollView)
-        
+        contentScrollView.addSubview(backdropImageView)
         contentScrollView.addSubview(contentStackView)
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
+            backdropImageView.topAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.topAnchor),
+            backdropImageView.leadingAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.leadingAnchor),
+            backdropImageView.trailingAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.trailingAnchor),
+            backdropImageView.heightAnchor.constraint(
+                equalTo: backdropImageView.widthAnchor,
+                multiplier: 9.0/16.0),
+            
             contentScrollView.topAnchor.constraint(equalTo: topAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -173,7 +207,9 @@ class MovieDetailView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            contentStackView.topAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.topAnchor),
+            contentStackView.topAnchor.constraint(
+                equalTo: backdropImageView.bottomAnchor,
+                constant: -20),
             contentStackView.bottomAnchor.constraint(equalTo: contentScrollView.contentLayoutGuide.bottomAnchor),
             contentStackView.leadingAnchor.constraint(
                 equalTo: contentScrollView.contentLayoutGuide.leadingAnchor,

@@ -53,7 +53,6 @@ class FilmListViewCell: UITableViewCell {
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         
@@ -91,6 +90,7 @@ class FilmListViewCell: UITableViewCell {
                 return
             }
             
+            self?.posterImageView.contentMode = .scaleAspectFill
             self?.posterImageView.image = image
         }
         

@@ -23,4 +23,11 @@ extension UIImageView {
         backgroundColor = .secondarySystemBackground
         contentMode = .scaleAspectFit
     }
+    
+    func setBackdropPlaceholder() {
+        image = UIImage(systemName: "photo")
+        tintColor = .secondaryLabel
+        backgroundColor = .secondarySystemBackground
+        contentMode = .scaleAspectFit
+    }
 }
