@@ -25,8 +25,8 @@ class MovieListViewModel {
     var onMoviesChanged: (() -> Void)?
     var onStateChanged: ((MovieListState) -> Void)?
     
-    init(service: MovieListServicing = MovieListService()) {
-        self.service = service
+    init(service: MovieListServicing? = nil) {
+        self.service = service ?? MovieListService()
     }
     
     var numberOfMovies: Int {
@@ -54,25 +54,22 @@ class MovieListViewModel {
         }
     }
     
-    func filterMovies(by searchText: String) {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        guard !query.isEmpty else {
+    func searchMovies(movieName: String) async {
+        state = .loading
+        do {
+            let response = try await service.searchMovies(movieName: movieName)
+
+            guard !Task.isCancelled else { return }
+
+            movies = response.results
+            state = movies.isEmpty ? .empty : .loaded
             filteredMovies = movies
-            state = .loaded
             onMoviesChanged?()
-            return
+        } catch is CancellationError {
+            // não há erro para mostrar pois a busca foi substituida
+        } catch {
+            state = .error(error.localizedDescription)
         }
-        
-        filteredMovies = movies.filter { movie in
-            movie.title.range(
-                of: query,
-                options: [.caseInsensitive, .diacriticInsensitive]
-            ) != nil
-        }
-        
-        state = filteredMovies.isEmpty ? .empty : .loaded
-        onMoviesChanged?()
     }
     
     func clearSearch() {

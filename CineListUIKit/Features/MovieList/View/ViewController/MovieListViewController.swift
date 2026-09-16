@@ -12,6 +12,8 @@ class MovieListViewController: UIViewController {
     let contentView = MovieListView()
     let viewModel = MovieListViewModel()
     
+    var searchTask: Task<Void, Never>?
+
     override func loadView() {
         view = contentView
     }
@@ -53,7 +55,7 @@ class MovieListViewController: UIViewController {
         }
     }
 
-    private func setupView() {        
+    private func setupView() {
         contentView.setupFilmList(dataSource: self, delegate: self)
         contentView.setupSearchBar(delegate: self)
         contentView.filmList.keyboardDismissMode = .onDrag
