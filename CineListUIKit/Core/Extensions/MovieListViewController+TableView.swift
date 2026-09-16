@@ -30,6 +30,9 @@ extension MovieListViewController:
         let movie = viewModel.movie(at: indexPath.row)
         cell.setMovie(movie: movie)
         
+        let isLastCell = indexPath.row == viewModel.numberOfMovies - 1
+        cell.setSeparatorHidden(isLastCell)
+        
         return cell
     }
     

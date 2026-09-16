@@ -27,6 +27,14 @@ class MovieListViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        title = "CineList"
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
     private func bindViewModel() {
         viewModel.onMoviesChanged = { [weak self] in
             self?.contentView.filmList.reloadData()
@@ -45,7 +53,7 @@ class MovieListViewController: UIViewController {
         }
     }
 
-    private func setupView() {
+    private func setupView() {        
         contentView.setupFilmList(dataSource: self, delegate: self)
         contentView.setupSearchBar(delegate: self)
         contentView.filmList.keyboardDismissMode = .onDrag

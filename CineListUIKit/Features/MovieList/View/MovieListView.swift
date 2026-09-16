@@ -9,14 +9,6 @@ import Foundation
 import UIKit
 
 class MovieListView: UIView {
-    
-    private lazy var filmListLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Lista de filmes"
-        return label
-    }()
-    
     let filmList: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -25,6 +17,8 @@ class MovieListView: UIView {
             forCellReuseIdentifier: FilmListViewCell.identifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 136
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        tableView.separatorStyle = .none
         return tableView
     }()
     
@@ -132,12 +126,10 @@ class MovieListView: UIView {
     }
     
     private func setHierarchy() {
-        addSubview(filmListLabel)
-        addSubview(searchBar)
         addSubview(filmList)
-        
         addSubview(loadingIndicator)
         addSubview(stateStackView)
+        addSubview(searchBar)
     }
     
     func render(state: MovieListState) {
@@ -181,36 +173,21 @@ class MovieListView: UIView {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            filmListLabel.topAnchor.constraint(
-                equalTo: safeAreaLayoutGuide.topAnchor,
-                constant: 16),
-            filmListLabel.leadingAnchor.constraint(
-                equalTo: leadingAnchor,
-                constant: 16),
-            filmListLabel.trailingAnchor.constraint(
-                equalTo: trailingAnchor,
-                constant: -16),
-            
-            filmList.topAnchor.constraint(
-                equalTo: searchBar.bottomAnchor,
-                constant: 16),
+            filmList.topAnchor.constraint(equalTo: topAnchor),
             filmList.leadingAnchor.constraint(
-                equalTo: leadingAnchor,
-                constant: 16),
+                equalTo: leadingAnchor),
             filmList.trailingAnchor.constraint(
-                equalTo: trailingAnchor,
-                constant: -16),
+                equalTo: trailingAnchor),
             filmList.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            searchBar.topAnchor.constraint(
-               equalTo: filmListLabel.bottomAnchor,
-               constant: 18),
            searchBar.leadingAnchor.constraint(
                equalTo: leadingAnchor,
                constant: 8),
            searchBar.trailingAnchor.constraint(
                equalTo: trailingAnchor,
                constant: -8),
+            searchBar.bottomAnchor.constraint(
+                equalTo: keyboardLayoutGuide.topAnchor),
         ])
         
         NSLayoutConstraint.activate([

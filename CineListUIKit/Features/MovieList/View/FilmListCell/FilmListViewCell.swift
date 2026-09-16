@@ -71,6 +71,13 @@ class FilmListViewCell: UITableViewCell {
         return stackView
     }()
     
+    private lazy var separatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .separator
+        return view
+    }()
+    
     func setMovie(movie: Movie) {
         representedMovieID = movie.id
         imageTask?.cancel()
@@ -117,6 +124,11 @@ class FilmListViewCell: UITableViewCell {
     private func setHierarchy() {
         contentView.addSubview(posterImageView)
         contentView.addSubview(infosStackView)
+        contentView.addSubview(separatorView)
+    }
+    
+    func setSeparatorHidden(_ isHidden: Bool) {
+        separatorView.isHidden = isHidden
     }
     
     private func setConstraints() {
@@ -143,7 +155,12 @@ class FilmListViewCell: UITableViewCell {
             infosStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             ratingImageView.widthAnchor.constraint(equalToConstant: 18),
-            ratingImageView.heightAnchor.constraint(equalToConstant: 18)
+            ratingImageView.heightAnchor.constraint(equalToConstant: 18),
+            
+            separatorView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 2 / traitCollection.displayScale)
         ])
     }
     
