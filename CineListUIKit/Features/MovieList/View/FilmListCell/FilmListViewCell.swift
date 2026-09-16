@@ -76,7 +76,7 @@ class FilmListViewCell: UITableViewCell {
         imageTask?.cancel()
         
         filmNameLabel.text = movie.title
-        filmRatingLabel.text = movie.vote_average?.formatRating() ?? ""
+        filmRatingLabel.text = movie.voteAverage?.formatRating() ?? ""
         posterImageView.setFilmPlaceholder()
         
         guard let posterURL = movie.posterURL(size: "w342") else {

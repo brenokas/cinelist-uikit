@@ -146,8 +146,8 @@ class MovieDetailView: UIView {
         backdropImageTask?.cancel()
         
         titleLabel.text = movie.title
-        releaseDateLabel.text = "\(movie.release_date?.formatDate() ?? "Sem data de lançamento disponível.")"
-        ratingLabel.text = "\(movie.vote_average?.formatRating() ?? "0.0")"
+        releaseDateLabel.text = "\(movie.releaseDate?.formatDate() ?? "Sem data de lançamento disponível.")"
+        ratingLabel.text = "\(movie.voteAverage?.formatRating() ?? "0.0")"
         overviewLabel.text = movie.overview ?? "Esse filme não possui sinopse."
         
         // estado inicial -> fallback do poster
@@ -156,27 +156,29 @@ class MovieDetailView: UIView {
         //estado inicial -> fallback do backdrop
         backdropImageView.setBackdropPlaceholder()
         
-        guard let posterURL = movie.posterURL(size: "w500") else { return }
-        guard let backdropURL = movie.backdropURL(size: "w1280") else { return }
-        
-        posterImageTask = Task { [weak self] in
-            guard let image = await ImageLoader.shared.image(from: posterURL),
-                  !Task.isCancelled else {
-                return
+        if let posterURL = movie.posterURL(size: "w500") {
+            posterImageTask = Task { [weak self] in
+                guard let image = await ImageLoader.shared.image(from: posterURL),
+                      !Task.isCancelled else {
+                    return
+                }
+                
+                self?.posterImageView.contentMode = .scaleAspectFill
+                self?.posterImageView.image = image
             }
-            
-            self?.posterImageView.contentMode = .scaleAspectFill
-            self?.posterImageView.image = image
         }
         
-        backdropImageTask = Task { [weak self] in
-            guard let image = await ImageLoader.shared.image(from: backdropURL),
-                  !Task.isCancelled else {
-                return
+        if let backdropURL = movie.backdropURL(size: "w1280") {
+            backdropImageTask = Task { [weak self] in
+                guard let image = await ImageLoader.shared.image(from: backdropURL),
+                      !Task.isCancelled else {
+                    return
+                }
+                
+                self?.backdropImageView.image = image
             }
-            
-            self?.backdropImageView.image = image
         }
+        
     }
     
     private func setupView() {

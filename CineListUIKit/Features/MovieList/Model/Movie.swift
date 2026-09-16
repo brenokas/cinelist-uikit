@@ -9,11 +9,22 @@ import Foundation
 
 struct Movie: Decodable, Identifiable, Hashable {
     let id: Int
-    let backdrop_path: String?
+    let backdropPath: String?
     let title: String
     let overview: String?
-    let poster_path: String?
-    let release_date: String?
-    let vote_average: Double?
-    let vote_count: Int?
+    let posterPath: String?
+    let releaseDate: String?
+    let voteAverage: Double?
+    let voteCount: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case backdropPath = "backdrop_path"
+        case title
+        case overview
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+    }
 }
