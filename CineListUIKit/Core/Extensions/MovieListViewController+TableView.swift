@@ -43,7 +43,9 @@ extension MovieListViewController:
         tableView.deselectRow(at: indexPath, animated: true)
         
         let movie = viewModel.movie(at: indexPath.row)
-        let movieDetail = MovieDetailViewController(movie: movie)
+        let movieDetail = MovieDetailViewController(
+            movie: movie,
+            favoriteStore: favoriteStore)
         
         navigationController?.pushViewController(
             movieDetail,

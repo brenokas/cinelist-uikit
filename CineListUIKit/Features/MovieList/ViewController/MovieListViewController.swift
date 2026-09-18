@@ -8,12 +8,33 @@
 import Foundation
 import UIKit
 
+@MainActor
 class MovieListViewController: UIViewController {
     let contentView = MovieListView()
-    let viewModel = MovieListViewModel()
+    let viewModel: MovieListViewModel
+    let favoriteStore : FavoriteMovieStoring
     
     var searchTask: Task<Void, Never>?
 
+    init(
+        viewModel: MovieListViewModel,
+        favoriteStore: FavoriteMovieStoring) {
+        self.viewModel = viewModel
+        self.favoriteStore = favoriteStore
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    convenience init() {
+        self.init(
+            viewModel: MovieListViewModel(),
+            favoriteStore: UserDefaultsFavoriteMovieStore()
+        )
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func loadView() {
         view = contentView
     }
@@ -60,5 +81,21 @@ class MovieListViewController: UIViewController {
         contentView.setupSearchBar(delegate: self)
         contentView.filmList.keyboardDismissMode = .onDrag
         contentView.filmList.tableFooterView = UIView()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "heart.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapFavorites)
+        )
+    }
+    
+    @objc
+    private func didTapFavorites() {
+        let favoritesList = FavoritesListViewController(favoriteStore: favoriteStore)
+        navigationController?.pushViewController(
+            favoritesList,
+            animated: true
+        )
     }
 }

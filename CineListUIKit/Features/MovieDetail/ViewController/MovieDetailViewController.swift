@@ -9,11 +9,12 @@ import UIKit
 
 class MovieDetailViewController: UIViewController {
     private let movie: Movie
-    
     private let contentView = MovieDetailView()
+    private let favoriteStore: FavoriteMovieStoring
     
-    init(movie: Movie) {
+    init(movie: Movie, favoriteStore: FavoriteMovieStoring) {
         self.movie = movie
+        self.favoriteStore = favoriteStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,6 +43,27 @@ class MovieDetailViewController: UIViewController {
     
     private func setupView() {
         contentView.configure(with: movie)
+        configureFavoriteButton()
+    }
+    
+    private func configureFavoriteButton() {
+        let imageName = favoriteStore.isFavorite(movie) ? "heart.fill" : "heart"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: imageName),
+            style: .plain,
+            target: self,
+            action: #selector(didTapFavoriteButton)
+        )
+        
+        navigationItem.rightBarButtonItem?.tintColor =
+        favoriteStore.isFavorite(movie) ? .systemRed : .white
+    }
+    
+    @objc
+    private func didTapFavoriteButton() {
+        favoriteStore.toggle(movie)
+        configureFavoriteButton()
     }
 }
 
