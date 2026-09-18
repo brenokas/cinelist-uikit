@@ -9,6 +9,15 @@ import Foundation
 import UIKit
 
 class MovieListView: UIView {
+    private let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "Buscar filme"
+        searchBar.autocapitalizationType = .none
+        searchBar.searchBarStyle = .minimal
+        return searchBar
+    }()
+    
     let filmList: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -20,15 +29,6 @@ class MovieListView: UIView {
         tableView.contentInsetAdjustmentBehavior = .automatic
         tableView.separatorStyle = .none
         return tableView
-    }()
-    
-    let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.placeholder = "Buscar filme"
-        searchBar.autocapitalizationType = .none
-        searchBar.searchBarStyle = .minimal
-        return searchBar
     }()
     
     private lazy var loadingIndicator: UIActivityIndicatorView = {
@@ -104,6 +104,18 @@ class MovieListView: UIView {
         filmList.delegate = delegate
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Atualiza o tamanho do header view para corresponder à largura da tabela
+        if let headerView = filmList.tableHeaderView {
+            let width = filmList.bounds.width
+            let height = headerView.bounds.height
+            headerView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+            filmList.tableHeaderView = headerView
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -113,23 +125,39 @@ class MovieListView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setSearchBar() {
+        let headerHeight: CGFloat = 56
+        let headerContainer = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: headerHeight))
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        headerContainer.addSubview(searchBar)
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: headerContainer.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: headerContainer.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: headerContainer.trailingAnchor, constant: -8),
+            searchBar.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor),
+        ])
+        
+        filmList.tableHeaderView = headerContainer
+    }
+    
     private func setupView() {
         backgroundColor = .systemBackground
         
+        setHierarchy()
+        setConstraints()
+        setSearchBar()
+                
         retryButton.addTarget(
             self,
             action: #selector(didTapRetryButton),
             for: .touchUpInside)
-        
-        setHierarchy()
-        setConstraints()
     }
     
     private func setHierarchy() {
         addSubview(filmList)
         addSubview(loadingIndicator)
         addSubview(stateStackView)
-        addSubview(searchBar)
     }
     
     func render(state: MovieListState) {
@@ -179,15 +207,6 @@ class MovieListView: UIView {
             filmList.trailingAnchor.constraint(
                 equalTo: trailingAnchor),
             filmList.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-           searchBar.leadingAnchor.constraint(
-               equalTo: leadingAnchor,
-               constant: 8),
-           searchBar.trailingAnchor.constraint(
-               equalTo: trailingAnchor,
-               constant: -8),
-            searchBar.bottomAnchor.constraint(
-                equalTo: keyboardLayoutGuide.topAnchor),
         ])
         
         NSLayoutConstraint.activate([
