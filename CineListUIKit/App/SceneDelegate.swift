@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,15 +19,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let movieListViewController = MovieListViewController()
-        let navigationController = UINavigationController(
-            rootViewController: movieListViewController
-        )
-        
-        navigationController.navigationBar.prefersLargeTitles = true
-        
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = navigationController
+        
+        if Auth.auth().currentUser == nil {
+            showLogin()
+        } else {
+            showMovieList()
+        }
+                
         window?.makeKeyAndVisible()
     }
 
@@ -57,7 +57,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
+    private func showLogin() {
+        let loginViewController = LoginViewController { [weak self] in self?.showMovieList()
+        }
+        
+        window?.rootViewController = UINavigationController (
+            rootViewController: loginViewController
+        )
+    }
+    
+    private func showMovieList() {
+        let movieListViewController = MovieListViewController()
+        
+        window?.rootViewController = UINavigationController (
+            rootViewController: movieListViewController
+        )
+    }
 
 }
 
