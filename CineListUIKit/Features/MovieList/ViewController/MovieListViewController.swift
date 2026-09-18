@@ -5,7 +5,7 @@
 //  Created by breno.farias on 10/09/26.
 //
 
-import Foundation
+import FirebaseAuth
 import UIKit
 
 @MainActor
@@ -15,19 +15,23 @@ class MovieListViewController: UIViewController {
     let favoriteStore : FavoriteMovieStoring
     
     var searchTask: Task<Void, Never>?
+    private let onLogout: () -> Void
 
     init(
         viewModel: MovieListViewModel,
-        favoriteStore: FavoriteMovieStoring) {
+        favoriteStore: FavoriteMovieStoring,
+        onLogout: @escaping () -> Void) {
         self.viewModel = viewModel
         self.favoriteStore = favoriteStore
+        self.onLogout = onLogout
         super.init(nibName: nil, bundle: nil)
     }
 
-    convenience init() {
+    convenience init(onLogout: @escaping () -> Void) {
         self.init(
             viewModel: MovieListViewModel(),
-            favoriteStore: UserDefaultsFavoriteMovieStore()
+            favoriteStore: UserDefaultsFavoriteMovieStore(),
+            onLogout: onLogout
         )
     }
     
@@ -88,6 +92,48 @@ class MovieListViewController: UIViewController {
             target: self,
             action: #selector(didTapFavorites)
         )
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapLogout)
+        )
+    }
+    
+    @objc private func didTapLogout() {
+        let alert = UIAlertController(
+            title: "Deseja sair?",
+            message: "Você será desconectado da sua conta.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "Cancelar", style: .cancel)
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "Sair", style: .destructive) { [weak self] _ in
+                self?.logout()
+            }
+        )
+        present(alert, animated: true)
+    }
+    
+    private func logout() {
+        do {
+            try Auth.auth().signOut()
+            onLogout()
+        
+        } catch {
+            let alert = UIAlertController(
+                title: "Erro ao sair",
+                message: "Não foi possível sair da conta. Tente novamente.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
     }
     
     @objc

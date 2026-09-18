@@ -68,7 +68,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showMovieList() {
-        let movieListViewController = MovieListViewController()
+        let movieListViewController = MovieListViewController() { [weak self] in
+            self?.showLogin()
+        }
         
         window?.rootViewController = UINavigationController (
             rootViewController: movieListViewController
