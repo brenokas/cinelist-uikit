@@ -9,6 +9,7 @@ import UIKit
 
 class LoginView: UIView {
     var onLoginButtonTapped: ((String, String) -> Void)?
+    var onSignUpTapped: (() -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,6 +63,46 @@ class LoginView: UIView {
         return button
     }()
     
+    private lazy var signUpTextView: UITextView = {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isScrollEnabled = false
+        textView.delegate = self
+        textView.backgroundColor = .clear
+        textView.textAlignment = .center
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        
+        let fullText = "Não possui uma conta? Cadastre-se"
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        attributedString.addAttribute(
+            .paragraphStyle,
+            value: paragraphStyle,
+            range: NSRange(location: 0, length: fullText.utf16.count))
+        
+        attributedString.addAttribute(
+            .font,
+            value: UIFont.systemFont(ofSize: 14),
+            range: NSRange(location: 0, length: fullText.count))
+        
+        let linkRange = (fullText as NSString).range(of: "Cadastre-se")
+        attributedString.addAttribute(
+            .link,
+            value: "signup://",
+            range: linkRange)
+        attributedString.addAttribute(
+            .foregroundColor,
+            value: UIColor.systemBlue,
+            range: linkRange)
+        
+        textView.attributedText = attributedString
+        textView.linkTextAttributes = [.foregroundColor: UIColor.systemBlue]
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
+    }()
+    
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.hidesWhenStopped = true
@@ -75,7 +116,8 @@ class LoginView: UIView {
             emailTextField,
             passwordTextField,
             loginButton,
-            loadingIndicator
+            loadingIndicator,
+            signUpTextView
         ])
         
         stackView.axis = .vertical
@@ -116,8 +158,7 @@ class LoginView: UIView {
 
             emailTextField.heightAnchor.constraint(equalToConstant: 48),
             passwordTextField.heightAnchor.constraint(equalToConstant: 48),
-            loginButton.heightAnchor.constraint(equalToConstant: 48)
-            
+            loginButton.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
 
@@ -127,5 +168,10 @@ class LoginView: UIView {
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         onLoginButtonTapped?(email, password)
+    }
+    
+    @objc
+    private func didTapSignIn() {
+        onSignUpTapped?()
     }
 }

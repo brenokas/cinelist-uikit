@@ -35,6 +35,13 @@ class LoginViewController: UIViewController {
         contentView.onLoginButtonTapped = { [weak self] email, password in
             self?.didTapLogin(email: email, password: password)
         }
+        
+        contentView.onSignUpTapped = { [weak self] in
+            let signUpViewController = SignUpViewController()
+            self?.navigationController?.pushViewController(
+                signUpViewController,
+                animated: true)
+        }
     }
 
     private func didTapLogin(email: String, password: String) {
