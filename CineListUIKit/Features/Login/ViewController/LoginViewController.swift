@@ -32,7 +32,6 @@ class LoginViewController: UIViewController {
     }
     
     private func setupView() {
-        title = "Entrar"
         contentView.onLoginButtonTapped = { [weak self] email, password in
             self?.didTapLogin(email: email, password: password)
         }

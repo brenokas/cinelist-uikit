@@ -18,7 +18,16 @@ class LoginView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    private lazy var appTitle: UILabel = {
+        let label = UILabel()
+        label.text = "CineList"
+        label.font = .boldSystemFont(ofSize: 30)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "E-mail"
@@ -62,6 +71,7 @@ class LoginView: UIView {
     
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
+            appTitle,
             emailTextField,
             passwordTextField,
             loginButton,
@@ -84,6 +94,7 @@ class LoginView: UIView {
 
     private func setupView() {
         backgroundColor = .systemBackground
+        contentStackView.setCustomSpacing(24, after: appTitle)
 
         setHierarchy()
         setConstraints()
@@ -106,6 +117,7 @@ class LoginView: UIView {
             emailTextField.heightAnchor.constraint(equalToConstant: 48),
             passwordTextField.heightAnchor.constraint(equalToConstant: 48),
             loginButton.heightAnchor.constraint(equalToConstant: 48)
+            
         ])
     }
 
