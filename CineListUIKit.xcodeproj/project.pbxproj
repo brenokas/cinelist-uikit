@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33929409306181F100F287D3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 33929408306181F100F287D3 /* FirebaseAnalytics */; };
 		A1B2C3D4E5F60718293A4B5C /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60718293A4B5E /* FirebaseCore */; };
 		A1B2C3D4E5F60718293A4B5D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60718293A4B5F /* FirebaseAuth */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,7 @@
 			files = (
 				A1B2C3D4E5F60718293A4B5C /* FirebaseCore in Frameworks */,
 				A1B2C3D4E5F60718293A4B5D /* FirebaseAuth in Frameworks */,
+				33929409306181F100F287D3 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				33523A7C3052EBDD00DD0753 /* CineListUIKit */,
+				33929407306181F100F287D3 /* Frameworks */,
 				33523A7B3052EBDD00DD0753 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +66,13 @@
 				33523A7A3052EBDD00DD0753 /* CineListUIKit.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		33929407306181F100F287D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -87,6 +97,7 @@
 			packageProductDependencies = (
 				A1B2C3D4E5F60718293A4B5E /* FirebaseCore */,
 				A1B2C3D4E5F60718293A4B5F /* FirebaseAuth */,
+				33929408306181F100F287D3 /* FirebaseAnalytics */,
 			);
 			productName = CineListUIKit;
 			productReference = 33523A7A3052EBDD00DD0753 /* CineListUIKit.app */;
@@ -364,6 +375,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		33929408306181F100F287D3 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3394A71F305D86AE004246F0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
 		A1B2C3D4E5F60718293A4B5E /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3394A71F305D86AE004246F0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

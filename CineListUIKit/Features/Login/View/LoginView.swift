@@ -21,36 +21,23 @@ class LoginView: UIView {
     }
     
     private lazy var appTitle: UILabel = {
-        let label = UILabel()
-        label.text = "CineList"
-        label.font = .boldSystemFont(ofSize: 30)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        AppScreenTitle(text: "CineList")
     }()
     
     private lazy var emailTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "E-mail"
-        textField.keyboardType = .emailAddress
-        textField.autocapitalizationType = .none
-        textField.autocorrectionType = .no
-        textField.textContentType = .username
-        textField.borderStyle = .roundedRect
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
+        AppTextField(
+            placeholder: "E-mail",
+            keyboardType: .emailAddress,
+            textContentType: .emailAddress
+        )
     }()
     
     private lazy var passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Password"
-        textField.isSecureTextEntry = true
-        textField.autocapitalizationType = .none
-        textField.autocorrectionType = .no
-        textField.textContentType = .password
-        textField.borderStyle = .roundedRect
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
+        AppTextField(
+            placeholder: "Senha",
+            textContentType: .password,
+            secureTextEntry: true
+        )
     }()
     
     private lazy var loginButton: UIButton = {

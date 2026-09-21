@@ -7,4 +7,17 @@
 
 import UIKit
 
-class SignUpViewController: UIViewController {}
+class SignUpViewController: UIViewController {
+    private let contentView = SignUpView()
+    
+    override func loadView() {
+        view = contentView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+    
+    private func setupView() {}
+}
