@@ -69,19 +69,12 @@ class MovieDetailViewController: UIViewController {
                 try await favoriteStore.toggle(movie)
                 configureFavoriteButton()
             } catch {
-                showFavoriteError(error)
+                present(
+                    ShowAlert.make(title: "Erro", message: "Não foi possível atualizar o favorito. Tente novamente."),
+                    animated: true
+                )
             }
         }
-    }
-    
-    private func showFavoriteError(_ error: Error) {
-        let alert = UIAlertController(
-            title: "Erro",
-            message: "Não foi possível atualizar o favorito. Tente novamente.",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
 }
 

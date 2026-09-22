@@ -43,18 +43,11 @@ class FavoritesListViewController: UIViewController {
                 contentView.render(isEmpty: favorites.isEmpty)
                 contentView.filmList.reloadData()
             } catch {
-                showLoadError(error)
+                present(
+                    ShowAlert.make(title: "Erro", message: "Falha ao carregar os filmes favoritos. Tente novamente mais tarde."),
+                    animated: true
+                )
             }
         }
-    }
-    
-    private func showLoadError(_ error: Error) {
-        let alert = UIAlertController(
-            title: "Erro",
-            message: "Falha ao carregar os filmes favoritos. Tente novamente mais tarde.",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
 }

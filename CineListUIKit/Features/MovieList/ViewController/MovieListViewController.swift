@@ -137,13 +137,14 @@ class MovieListViewController: UIViewController {
             onLogout()
         
         } catch {
-            let alert = UIAlertController(
-                title: "Erro ao sair",
-                message: "Não foi possível sair da conta. Tente novamente.",
-                preferredStyle: .alert
+
+            present(
+                ShowAlert.make(
+                    title: "Erro ao sair",
+                    message: "Não foi possível sair da conta. Tente novamente."
+                ),
+                animated: true
             )
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
         }
     }
     

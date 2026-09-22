@@ -46,9 +46,12 @@ class LoginViewController: UIViewController {
 
     private func didTapLogin(email: String, password: String) {
         guard !email.isEmpty, !password.isEmpty else {
-            showAlert(
-                title: "Erro",
-                message: "Por favor, preencha todos os campos."
+            present(
+                ShowAlert.make(
+                    title: "Erro",
+                    message: "Por favor, preencha todos os campos."
+                ),
+                animated: true
             )
             return
         }
@@ -67,9 +70,12 @@ class LoginViewController: UIViewController {
                 }
 
                 guard result?.user != nil else {
-                    self.showAlert(
-                        title: "Erro ao entrar",
-                        message: "Não foi possível autenticar. Tente novamente."
+                    present(
+                        ShowAlert.make(
+                            title: "Erro ao entrar",
+                            message: "Não foi possível autenticar. Tente novamente."
+                        ),
+                        animated: true
                     )
                     return
                 }
@@ -96,19 +102,11 @@ class LoginViewController: UIViewController {
             message = "Ocorreu um erro desconhecido. Tente novamente."
         }
 
-        showAlert(
+        let alert = ShowAlert.make(
             title: "Erro ao entrar",
             message: message
         )
-    }
 
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
 }
