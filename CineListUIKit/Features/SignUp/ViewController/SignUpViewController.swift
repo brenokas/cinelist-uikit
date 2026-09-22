@@ -7,10 +7,12 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 @MainActor
 class SignUpViewController: UIViewController {
     private let contentView = SignUpView()
+    private let db = Firestore.firestore()
     
     override func loadView() {
         view = contentView
@@ -99,12 +101,23 @@ class SignUpViewController: UIViewController {
 
                     do {
                         try await profileChangeRequest.commitChanges()
+
+                        try await db
+                            .collection("users")
+                            .document(user.uid)
+                            .setData([
+                                "uid": user.uid,
+                                "name": name,
+                                "email": email,
+                                "createdAt": FieldValue.serverTimestamp()
+                            ])
+
                         self.showSuccessAlert()
                     } catch {
                         self.present(
                             ShowAlert.make(
                                 title: "Erro ao cadastrar",
-                                message: "Sua conta foi criada, mas não foi possível salvar seu nome."
+                                message: "Sua conta foi criada, mas não foi possível salvar todos os dados."
                             ),
                             animated: true
                         )
