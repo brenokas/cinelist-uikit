@@ -5,33 +5,29 @@
 //  Created by breno.farias on 10/09/26.
 //
 
-import FirebaseAuth
 import UIKit
 
 @MainActor
 class MovieListViewController: UIViewController {
     let contentView = MovieListView()
     let viewModel: MovieListViewModel
-    let favoriteStore : FavoriteMovieStoring
-    
+    let favoriteStore: FavoriteMovieStoring
+
     var searchTask: Task<Void, Never>?
-    private let onLogout: () -> Void
 
     init(
         viewModel: MovieListViewModel,
-        favoriteStore: FavoriteMovieStoring,
-        onLogout: @escaping () -> Void) {
+        favoriteStore: FavoriteMovieStoring
+    ) {
         self.viewModel = viewModel
         self.favoriteStore = favoriteStore
-        self.onLogout = onLogout
         super.init(nibName: nil, bundle: nil)
     }
 
-    convenience init(onLogout: @escaping () -> Void) {
+    convenience init() {
         self.init(
             viewModel: MovieListViewModel(),
-            favoriteStore: FirestoreFavoriteMovieStore(),
-            onLogout: onLogout
+            favoriteStore: FirestoreFavoriteMovieStore()
         )
     }
     
@@ -67,7 +63,7 @@ class MovieListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        title = "CineList"
+        navigationItem.title = "cinelist"
         navigationItem.largeTitleDisplayMode = .always
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -95,65 +91,5 @@ class MovieListViewController: UIViewController {
         contentView.setupSearchBar(delegate: self)
         contentView.filmList.keyboardDismissMode = .onDrag
         contentView.filmList.tableFooterView = UIView()
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "heart.fill"),
-            style: .plain,
-            target: self,
-            action: #selector(didTapFavorites)
-        )
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
-            style: .plain,
-            target: self,
-            action: #selector(didTapLogout)
-        )
-    }
-    
-    @objc
-    private func didTapLogout() {
-        let alert = UIAlertController(
-            title: "Deseja sair?",
-            message: "Você será desconectado da sua conta.",
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(
-            UIAlertAction(title: "Cancelar", style: .cancel)
-        )
-        
-        alert.addAction(
-            UIAlertAction(title: "Sair", style: .destructive) { [weak self] _ in
-                self?.logout()
-            }
-        )
-        present(alert, animated: true)
-    }
-    
-    private func logout() {
-        do {
-            try Auth.auth().signOut()
-            onLogout()
-        
-        } catch {
-
-            present(
-                ShowAlert.make(
-                    title: "Erro ao sair",
-                    message: "Não foi possível sair da conta. Tente novamente."
-                ),
-                animated: true
-            )
-        }
-    }
-    
-    @objc
-    private func didTapFavorites() {
-        let favoritesList = FavoritesListViewController(favoriteStore: favoriteStore)
-        navigationController?.pushViewController(
-            favoritesList,
-            animated: true
-        )
     }
 }
