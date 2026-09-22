@@ -59,7 +59,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showLogin() {
-        let loginViewController = LoginViewController { [weak self] in self?.showMovieList()
+        let loginViewController = LoginViewController { [weak self] in
+            self?.showMovieList()
         }
         
         window?.rootViewController = UINavigationController (
@@ -68,13 +69,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func showMovieList() {
-        let movieListViewController = MovieListViewController() { [weak self] in
+        let mainTabBarController = MainTabBarController { [weak self] in
             self?.showLogin()
         }
         
-        window?.rootViewController = UINavigationController (
-            rootViewController: movieListViewController
-        )
+        window?.rootViewController = mainTabBarController
     }
 
 }
