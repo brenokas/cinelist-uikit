@@ -10,8 +10,10 @@ import Foundation
 @MainActor
 protocol FavoriteMovieStoring: AnyObject {
     var favorites: [Movie] { get }
+    
+    func load() async throws
     func isFavorite(_ movie: Movie) -> Bool
-    func toggle(_ movie: Movie)
+    func toggle(_ movie: Movie) async throws
 }
 
 @MainActor
@@ -26,11 +28,15 @@ class UserDefaultsFavoriteMovieStore: FavoriteMovieStoring {
         loadFavorites()
     }
     
+    func load() async throws {
+        loadFavorites()
+    }
+    
     func isFavorite(_ movie: Movie) -> Bool {
         favorites.contains(where: { $0.id == movie.id })
     }
     
-    func toggle(_ movie: Movie) {
+    func toggle(_ movie: Movie) async throws {
         if let index = favorites.firstIndex(where: { $0.id == movie.id }) {
             favorites.remove(at: index)
         } else {

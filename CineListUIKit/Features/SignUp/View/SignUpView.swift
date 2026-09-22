@@ -48,7 +48,7 @@ class SignUpView: UIView {
     
     private lazy var confirmPasswordTextField: UITextField = {
         AppTextField(
-            placeholder: "Confirmar senha",
+            placeholder: "Confirmarfires senha",
             textContentType: .password,
             secureTextEntry: true
         )

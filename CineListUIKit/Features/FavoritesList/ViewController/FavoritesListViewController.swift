@@ -36,8 +36,25 @@ class FavoritesListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let favorites = favoriteStore.favorites
-        contentView.render(isEmpty: favorites.isEmpty)
-        contentView.filmList.reloadData()
+        Task {
+            do {
+                try await favoriteStore.load()
+                let favorites = favoriteStore.favorites
+                contentView.render(isEmpty: favorites.isEmpty)
+                contentView.filmList.reloadData()
+            } catch {
+                showLoadError(error)
+            }
+        }
+    }
+    
+    private func showLoadError(_ error: Error) {
+        let alert = UIAlertController(
+            title: "Erro",
+            message: "Falha ao carregar os filmes favoritos. Tente novamente mais tarde.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }

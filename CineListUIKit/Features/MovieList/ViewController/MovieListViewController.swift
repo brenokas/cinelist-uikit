@@ -30,7 +30,7 @@ class MovieListViewController: UIViewController {
     convenience init(onLogout: @escaping () -> Void) {
         self.init(
             viewModel: MovieListViewModel(),
-            favoriteStore: UserDefaultsFavoriteMovieStore(),
+            favoriteStore: FirestoreFavoriteMovieStore(),
             onLogout: onLogout
         )
     }
@@ -50,7 +50,17 @@ class MovieListViewController: UIViewController {
         bindViewModel()
         
         Task {
-            await viewModel.loadMovies()
+            do {
+                async let favoritesLoad: Void = favoriteStore.load()
+                async let moviesLoad: Void = viewModel.loadMovies()
+                
+                _ = try await favoritesLoad
+                await moviesLoad
+                
+                contentView.filmList.reloadData()
+            } catch {
+                print("Erro ao carregar favoritos: \(error)")
+            }
         }
     }
     
@@ -101,7 +111,8 @@ class MovieListViewController: UIViewController {
         )
     }
     
-    @objc private func didTapLogout() {
+    @objc
+    private func didTapLogout() {
         let alert = UIAlertController(
             title: "Deseja sair?",
             message: "Você será desconectado da sua conta.",
