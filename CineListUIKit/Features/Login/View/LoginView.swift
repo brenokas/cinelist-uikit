@@ -103,8 +103,8 @@ class LoginView: UIView {
             emailTextField,
             passwordTextField,
             loginButton,
-            loadingIndicator,
-            signUpTextView
+            signUpTextView,
+            loadingIndicator
         ])
         
         stackView.axis = .vertical
