@@ -48,13 +48,13 @@ class SignUpView: UIView {
     
     private lazy var confirmPasswordTextField: UITextField = {
         AppTextField(
-            placeholder: "Confirmarfires senha",
+            placeholder: "Confirmar senha",
             textContentType: .password,
             secureTextEntry: true
         )
     }()
     
-    private lazy var signInButton: UIButton = {
+    private lazy var signUpButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.title = "Cadastrar"
         
@@ -64,6 +64,13 @@ class SignUpView: UIView {
         return button
     }()
     
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             appTitle,
@@ -71,7 +78,8 @@ class SignUpView: UIView {
             emailTextField,
             passwordTextField,
             confirmPasswordTextField,
-            signInButton
+            signUpButton,
+            loadingIndicator
         ])
         stackView.axis = .vertical
         stackView.spacing = 16
@@ -103,12 +111,28 @@ class SignUpView: UIView {
             emailTextField.heightAnchor.constraint(equalToConstant: 48),
             passwordTextField.heightAnchor.constraint(equalToConstant: 48),
             confirmPasswordTextField.heightAnchor.constraint(equalToConstant: 48),
-            signInButton.heightAnchor.constraint(equalToConstant: 48),
+            signUpButton.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
     
+    func setLoading(_ isLoading: Bool) {
+        nameTextField.isEnabled = !isLoading
+        emailTextField.isEnabled = !isLoading
+        passwordTextField.isEnabled = !isLoading
+        confirmPasswordTextField.isEnabled = !isLoading
+        signUpButton.isEnabled = !isLoading
+
+        if isLoading {
+            signUpButton.configuration?.title = "Cadastrando..."
+            loadingIndicator.startAnimating()
+        } else {
+            signUpButton.configuration?.title = "Cadastrar"
+            loadingIndicator.stopAnimating()
+        }
+    }
+
     @objc
-    private func didTapSignUp(){
+    private func didTapSignUp() {
         let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
