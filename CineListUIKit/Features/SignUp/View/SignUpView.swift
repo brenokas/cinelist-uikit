@@ -89,8 +89,21 @@ class SignUpView: UIView {
     
     private func setupView() {
         backgroundColor = .systemBackground
+
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+        addGestureRecognizer(tapGesture)
+
         setHierarchy()
         setConstraints()
+    }
+
+    @objc
+    private func dismissKeyboard() {
+        endEditing(true)
     }
     
     private func setHierarchy(){

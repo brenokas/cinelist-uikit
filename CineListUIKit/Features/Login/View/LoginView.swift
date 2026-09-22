@@ -125,8 +125,20 @@ class LoginView: UIView {
         backgroundColor = .systemBackground
         contentStackView.setCustomSpacing(24, after: appTitle)
 
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+        addGestureRecognizer(tapGesture)
+
         setHierarchy()
         setConstraints()
+    }
+
+    @objc
+    private func dismissKeyboard() {
+        endEditing(true)
     }
 
     private func setHierarchy() {

@@ -25,6 +25,12 @@ class AppTextField: UITextField {
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
         self.borderStyle = .roundedRect
+        self.returnKeyType = .done
+        self.addTarget(
+            self,
+            action: #selector(dismissKeyboard),
+            for: .editingDidEndOnExit
+        )
         self.translatesAutoresizingMaskIntoConstraints = false
             
         if secureTextEntry {
@@ -34,6 +40,11 @@ class AppTextField: UITextField {
         
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc
+    private func dismissKeyboard() {
+        resignFirstResponder()
     }
     
     private func setupPasswordButton() {
