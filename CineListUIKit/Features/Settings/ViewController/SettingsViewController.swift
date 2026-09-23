@@ -37,9 +37,21 @@ final class SettingsViewController: UIViewController {
     }
 
     private func setupView() {
+        contentView.selectedThemeIndex = ThemeManager.shared.currentTheme.rawValue
+        
         contentView.onExitTapped = { [weak self] in
             self?.didTapExit()
         }
+        
+        contentView.onChangeTheme = { [weak self] selectedTheme in
+            self?.didChangeTheme(selectedTheme)
+        }
+    }
+    
+    private func didChangeTheme(_ selectedTheme: Int) {
+        guard let theme = AppTheme(rawValue: selectedTheme) else { return }
+        
+        ThemeManager.shared.setTheme(theme)
     }
 
     private func didTapExit() {

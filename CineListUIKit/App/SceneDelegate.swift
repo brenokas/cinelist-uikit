@@ -21,6 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
+        ThemeManager.shared.applySavedTheme()
+        
         if Auth.auth().currentUser == nil {
             showLogin()
         } else {

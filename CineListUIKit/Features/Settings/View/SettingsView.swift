@@ -9,7 +9,18 @@ import UIKit
 
 class SettingsView: UIView {
     var onExitTapped: (() -> Void)?
+    var onChangeTheme: ((Int) -> Void)?
 
+    var selectedThemeIndex: Int {
+        get {
+            themeSelector.selectedSegmentIndex
+        }
+        
+        set {
+            themeSelector.selectedSegmentIndex = newValue
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -39,11 +50,26 @@ class SettingsView: UIView {
         button.addTarget(self, action: #selector(didTapExit), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var themeSelector: UISegmentedControl = {
+        let items = ["Sistema", "Claro", "Escuro"]
+        let selector = UISegmentedControl(items: items)
+        selector.translatesAutoresizingMaskIntoConstraints = false
+        selector.selectedSegmentIndex = 0
+        selector.addTarget(self, action: #selector(didChangeTheme), for: .valueChanged)
+        return selector
+    }()
 
     @objc
     private func didTapExit() {
         onExitTapped?()
     }
+    
+    @objc
+    private func didChangeTheme() {
+        onChangeTheme?(themeSelector.selectedSegmentIndex)
+    }
+    
 
     private func setupView() {
         backgroundColor = .systemBackground
@@ -53,6 +79,7 @@ class SettingsView: UIView {
     }
 
     private func setHierarchy() {
+        addSubview(themeSelector)
         addSubview(exitButton)
     }
 
@@ -60,8 +87,27 @@ class SettingsView: UIView {
         NSLayoutConstraint.activate([
             exitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             exitButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            exitButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            exitButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            exitButton.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: 16
+            ),
+            exitButton.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -16
+            ),
+            
+            themeSelector.bottomAnchor.constraint(
+                equalTo: exitButton.topAnchor,
+                constant: -16
+            ),
+            themeSelector.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: 16
+            ),
+            themeSelector.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -16
+            )
         ])
     }
 }
