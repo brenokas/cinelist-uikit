@@ -43,7 +43,7 @@ class MainTabBarController: UITabBarController {
 
         settingsNavigationController.tabBarItem = UITabBarItem(
             title: "Configurações",
-            image: UIImage(systemName: "gear"),
+            image: UIImage(systemName: "gearshape"),
             selectedImage: UIImage(systemName: "gearshape.fill")
         )
 
